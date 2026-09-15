@@ -13,7 +13,7 @@ function showCheck(element, passed, message) {
 }
 
 async function getEthBalance(address) {
-  const response = await fetch("https://cloudflare-eth.com", {
+ const response = await fetch("https://ethereum-rpc.publicnode.com", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

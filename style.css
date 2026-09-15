@@ -52,3 +52,17 @@ button:hover {
   border-radius: 10px;
   background-color: #161b22;
 }
+
+#check-list {
+  padding-left: 0;
+  list-style: none;
+  line-height: 2;
+}
+
+.passed {
+  color: #3fb950;
+}
+
+.failed {
+  color: #f85149;
+}

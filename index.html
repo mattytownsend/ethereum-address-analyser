@@ -8,5 +8,22 @@
 <body>
   <h1>Ethereum Address Analyser</h1>
   <p>Enter an Ethereum wallet address to analyse it.</p>
+  <form id="address-form">
+  <label for="wallet-address">Ethereum wallet address</label>
+
+  <input
+    id="wallet-address"
+    type="text"
+    placeholder="0x..."
+    autocomplete="off"
+  >
+
+  <button type="submit">Analyse address</button>
+</form>
+
+<section id="result">
+  <h2>Analysis</h2>
+  <p id="result-message">Enter an address to begin.</p>
+</section>
 </body>
 </html>

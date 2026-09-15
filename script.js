@@ -12,7 +12,37 @@ function showCheck(element, passed, message) {
   element.className = passed ? "passed" : "failed";
 }
 
-form.addEventListener("submit", function (event) {
+async function getEthBalance(address) {
+  const response = await fetch("https://cloudflare-eth.com", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      method: "eth_getBalance",
+      params: [address, "latest"],
+      id: 1
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Ethereum request failed");
+  }
+
+  const data = await response.json();
+
+  if (data.error) {
+    throw new Error(data.error.message);
+  }
+
+  const wei = BigInt(data.result);
+  const eth = Number(wei) / 1e18;
+
+  return eth;
+}
+
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const address = input.value.trim();
@@ -37,9 +67,19 @@ form.addEventListener("submit", function (event) {
 
   checkList.hidden = false;
 
-  if (hasPrefix && hasCorrectLength && hasValidCharacters) {
-    resultMessage.textContent = "This address has a valid basic Ethereum format.";
-  } else {
+  if (!(hasPrefix && hasCorrectLength && hasValidCharacters)) {
     resultMessage.textContent = "This address failed one or more format checks.";
+    return;
+  }
+
+  resultMessage.textContent = "Valid format. Retrieving Ethereum balance...";
+
+  try {
+    const balance = await getEthBalance(address);
+    resultMessage.textContent = `Ethereum balance: ${balance.toFixed(6)} ETH`;
+  } catch (error) {
+    resultMessage.textContent =
+      "The address is valid, but its balance could not be retrieved.";
+    console.error(error);
   }
 });
